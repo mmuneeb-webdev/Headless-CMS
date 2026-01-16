@@ -8,9 +8,15 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    // Gets BOTH guards
+    // public function index()
+    // {
+    //     $permissions = Permission::all();
+    //     return view('admin.permissions.index', compact('permissions'));
+    // }
     public function index()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::where('guard_name', 'web')->get();
         return view('admin.permissions.index', compact('permissions'));
     }
 

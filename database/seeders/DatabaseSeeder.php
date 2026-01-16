@@ -156,6 +156,15 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Roles, Permissions, and Users (WEB + API) seeded successfully.');
+        
+        $this->command->info('✅ Roles, Permissions, and Test Users (WEB + API) seeded successfully.');
+        $this->command->info('');
+        $this->command->info('Test Credentials:');
+        $this->command->info('Super Admin: superadmin@contentra.test / password');
+        $this->command->info('Admin: admin@contentra.test / password');
+        $this->command->info('Editor: editor@contentra.test / password');
+        $this->command->info('Author: author@contentra.test / password');
+        $this->command->info('Viewer: viewer@contentra.test / password');
+        $this->call(ContentSeeder::class);
     }
 }

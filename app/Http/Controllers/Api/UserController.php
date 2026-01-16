@@ -45,28 +45,32 @@ class UserController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, User $user)
+    public function show(User $user)
     {
-        $data = $request->validate([
-            'name'  => 'sometimes|string',
-            'roles' => 'sometimes|array',
-        ]);
-
-        $user->update($request->only('name'));
-
-        if (isset($data['roles'])) {
-            $roles = Role::whereIn('name', $data['roles'])
-                ->where('guard_name', 'api')
-                ->get();
-
-            $user->syncRoles($roles);
-        }
-
         return response()->json([
-            'message' => 'User updated',
-            'user'    => $user->load('roles.permissions'),
+            'user' => $user,
         ]);
     }
+
+    public function update(Request $request, User $user)
+    {
+        if ($request->user()->id !== $user->id) {
+            abort(403, 'You can only update your own profile.');
+        }
+
+        $data = $request->validate([
+            'name'  => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($data);
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'user' => $user,
+        ]);
+    }
+
 
     public function destroy(User $user)
     {
