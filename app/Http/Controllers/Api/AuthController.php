@@ -37,36 +37,33 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials'],
-            ]);
-        }
-
-        // 🔑 AUTO-SYNC WEB → API ROLE
-        foreach ($user->roles()->where('guard_name', 'web')->get() as $webRole) {
-            if (! $user->hasRole($webRole->name, 'api')) {
-                $user->assignRole($webRole->name, 'api');
-            }
-        }
-
-        $token = $user->createToken('api-token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user->load('roles.permissions'),
-            'token' => $token,
-        ]);
+    if (!auth()->attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
+
+    $user = auth()->user();
+
+    // OPTIONAL: require API access permission
+    if (!$user->can('api-access')) {
+        return response()->json(['message' => 'API access denied'], 403);
+    }
+
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return response()->json([
+        'token' => $token,
+        'user' => $user,
+        'roles' => $user->getRoleNames(),
+        'permissions' => $user->getAllPermissions()->pluck('name'),
+    ]);
+}
 
     public function logout(Request $request)
     {

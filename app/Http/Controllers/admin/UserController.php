@@ -88,23 +88,54 @@ class UserController extends Controller
      * Update user details (name, email, password)
      */
     public function update(Request $request, User $user)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
-            'password' => ['nullable', 'confirmed', Password::min(8)],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+        'password' => ['nullable', 'confirmed', Password::min(8)],
+        'roles' => ['nullable', 'array'],
+        'roles.*' => ['string', 'exists:roles,name'],
+    ]);
 
-        $data = $request->only('name', 'email');
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+    // Update user info
+    $data = $request->only('name', 'email');
+
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
+    }
+
+    $user->update($data);
+
+    // -------------------------
+    // NEW: Update roles here
+    // -------------------------
+
+    if ($request->has('roles')) {
+
+        // Prevent removing last super-admin
+        if ($user->hasRole('super-admin')) {
+            $superAdminCount = User::role('super-admin')->count();
+
+            if (
+                $superAdminCount <= 1 &&
+                !in_array('super-admin', $request->roles ?? [])
+            ) {
+                return back()->with('error', 'Cannot remove the last super-admin!');
+            }
         }
 
-        $user->update($data);
+        // Prevent assigning super-admin via UI
+        $rolesToAssign = array_filter(
+            $request->roles ?? [],
+            fn ($role) => $role !== 'super-admin'
+        );
 
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User updated successfully!');
+        $user->syncRoles($rolesToAssign);
     }
+
+    return redirect()->route('admin.users.index')
+        ->with('success', 'User updated successfully!');
+}
 
     /**
      * Update roles for a user

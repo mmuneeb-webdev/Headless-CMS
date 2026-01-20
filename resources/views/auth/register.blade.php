@@ -5,18 +5,19 @@
     <title>Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+<body class="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-100 to-purple-200 flex items-center justify-center">
 
-    <div class="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
+    <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-10 w-full max-w-md border border-white/40">
+
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">
             Create Account
         </h2>
 
         @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                <ul class="text-sm">
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
+                <ul>
                     @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li>• {{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -26,58 +27,42 @@
             @csrf
 
             <div>
-                <label class="block text-gray-600 mb-1">Name</label>
-                <input
-                    type="text"
-                    name="name"
-                    value="{{ old('name') }}"
-                    required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-emerald-300"
-                >
+                <label class="block text-gray-700 mb-1 font-medium">Name</label>
+                <input type="text" name="name" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg
+                           focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
             </div>
 
             <div>
-                <label class="block text-gray-600 mb-1">Email</label>
-                <input
-                    type="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-emerald-300"
-                >
+                <label class="block text-gray-700 mb-1 font-medium">Email</label>
+                <input type="email" name="email" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg
+                           focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
             </div>
 
             <div>
-                <label class="block text-gray-600 mb-1">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-emerald-300"
-                >
+                <label class="block text-gray-700 mb-1 font-medium">Password</label>
+                <input type="password" name="password" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg
+                           focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
             </div>
 
             <div>
-                <label class="block text-gray-600 mb-1">Confirm Password</label>
-                <input
-                    type="password"
-                    name="password_confirmation"
-                    required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-emerald-300"
-                >
+                <label class="block text-gray-700 mb-1 font-medium">Confirm Password</label>
+                <input type="password" name="password_confirmation" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg
+                           focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition">
             </div>
 
-            <button
-                type="submit"
-                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg transition"
-            >
+            <button type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition">
                 Register
             </button>
         </form>
 
         <p class="text-center text-sm text-gray-600 mt-4">
             Already have an account?
-            <a href="{{ url('/login') }}" class="text-emerald-600 hover:underline">
+            <a href="{{ url('/login') }}" class="text-indigo-600 font-medium hover:underline">
                 Login
             </a>
         </p>

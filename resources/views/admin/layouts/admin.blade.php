@@ -12,7 +12,7 @@
     <div class="min-h-screen flex">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 relative">
+        <aside class="w-64 bg-white border-r border-gray-200 shrink-0 relative">
 
             <!-- Logo -->
             <div class="p-6 border-b border-gray-200">

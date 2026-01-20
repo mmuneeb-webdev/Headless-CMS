@@ -11,17 +11,13 @@ use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Clear cached permissions
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         /*
         |--------------------------------------------------------------------------
-        | PERMISSIONS (WEB + API)
+        | PERMISSIONS (WEB ONLY)
         |--------------------------------------------------------------------------
         */
         $permissions = [
@@ -40,16 +36,11 @@ class DatabaseSeeder extends Seeder
                 'name' => $permission,
                 'guard_name' => 'web',
             ]);
-
-            Permission::firstOrCreate([
-                'name' => $permission,
-                'guard_name' => 'api',
-            ]);
         }
 
         /*
         |--------------------------------------------------------------------------
-        | ROLES (WEB + API)
+        | ROLES (WEB ONLY — IMPORTANT)
         |--------------------------------------------------------------------------
         */
         $roles = ['super-admin', 'admin', 'editor', 'author', 'viewer'];
@@ -59,74 +50,47 @@ class DatabaseSeeder extends Seeder
                 'name' => $roleName,
                 'guard_name' => 'web',
             ]);
-
-            Role::firstOrCreate([
-                'name' => $roleName,
-                'guard_name' => 'api',
-            ]);
         }
 
-        // Super Admin → ALL permissions
-        Role::where('name', 'super-admin')->where('guard_name', 'web')->first()
-            ->givePermissionTo(Permission::where('guard_name', 'web')->get());
+        // Super Admin → all permissions
+        Role::where('name', 'super-admin')->first()
+            ->givePermissionTo(Permission::all());
 
-        Role::where('name', 'super-admin')->where('guard_name', 'api')->first()
-            ->givePermissionTo(Permission::where('guard_name', 'api')->get());
-
-        // Admin permissions
-        $adminPermissions = [
+        // Admin
+        Role::where('name', 'admin')->first()->syncPermissions([
             'view-users', 'create-users', 'edit-users', 'delete-users',
             'view-roles', 'create-roles', 'edit-roles', 'delete-roles',
-            'view-permissions', "create-permissions", "delete-permissions", 'edit-permissions',
+            'view-permissions', 'create-permissions', 'edit-permissions', 'delete-permissions',
             'view-content-types', 'create-content-types', 'edit-content-types', 'delete-content-types',
             'view-content', 'create-content', 'edit-content', 'delete-content',
             'publish-content', 'unpublish-content',
             'view-media', 'upload-media', 'delete-media',
-        ];
-
-        Role::where('name', 'admin')->where('guard_name', 'web')->first()
-            ->syncPermissions($adminPermissions);
-
-        Role::where('name', 'admin')->where('guard_name', 'api')->first()
-            ->syncPermissions(array_merge($adminPermissions, ['api-access']));
+            'api-access',
+        ]);
 
         // Editor
-        $editorPermissions = [
+        Role::where('name', 'editor')->first()->syncPermissions([
             'view-content', 'create-content', 'edit-content', 'delete-content',
             'publish-content', 'unpublish-content',
             'view-media', 'upload-media', 'delete-media',
-        ];
-
-        Role::where('name', 'editor')->where('guard_name', 'web')->first()
-            ->syncPermissions($editorPermissions);
-
-        Role::where('name', 'editor')->where('guard_name', 'api')->first()
-            ->syncPermissions(array_merge($editorPermissions, ['api-access']));
+            'api-access',
+        ]);
 
         // Author
-        $authorPermissions = [
+        Role::where('name', 'author')->first()->syncPermissions([
             'view-content', 'create-content', 'edit-content',
             'view-media', 'upload-media',
-        ];
-
-        Role::where('name', 'author')->where('guard_name', 'web')->first()
-            ->syncPermissions($authorPermissions);
-
-        Role::where('name', 'author')->where('guard_name', 'api')->first()
-            ->syncPermissions(array_merge($authorPermissions, ['api-access']));
+            'api-access',
+        ]);
 
         // Viewer
-        $viewerPermissions = ['view-content', 'view-media'];
-
-        Role::where('name', 'viewer')->where('guard_name', 'web')->first()
-            ->syncPermissions($viewerPermissions);
-
-        Role::where('name', 'viewer')->where('guard_name', 'api')->first()
-            ->syncPermissions(array_merge($viewerPermissions, ['api-access']));
+        Role::where('name', 'viewer')->first()->syncPermissions([
+            'view-content', 'view-media', 'api-access',
+        ]);
 
         /*
         |--------------------------------------------------------------------------
-        | USERS (ASSIGNED WEB + API ROLES CORRECTLY)
+        | USERS
         |--------------------------------------------------------------------------
         */
         $users = [
@@ -137,26 +101,16 @@ class DatabaseSeeder extends Seeder
             'viewer'      => 'viewer@contentra.test',
         ];
 
-        foreach ($users as $roleName => $email) {
+        foreach ($users as $role => $email) {
             $user = User::create([
-                'name' => ucfirst(str_replace('-', ' ', $roleName)),
+                'name' => ucfirst($role),
                 'email' => $email,
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]);
 
-            // Assign WEB role
-            $user->assignRole(
-                Role::where('name', $roleName)->where('guard_name', 'web')->first()
-            );
-
-            // Assign API role
-            $user->assignRole(
-                Role::where('name', $roleName)->where('guard_name', 'api')->first()
-            );
+            $user->assignRole($role); // ONLY ONCE
         }
-
-        
         $this->command->info('✅ Roles, Permissions, and Test Users (WEB + API) seeded successfully.');
         $this->command->info('');
         $this->command->info('Test Credentials:');

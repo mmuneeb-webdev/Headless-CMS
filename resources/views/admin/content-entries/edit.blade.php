@@ -170,17 +170,25 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Actions</label>
                         <div class="flex space-x-3">
                             @if($entry->status === 'draft')
-                            <button type="button" 
-                                    onclick="document.querySelector('form').action='{{ route('admin.content-entries.publish', [$contentType, $entry]) }}'; document.querySelector('form').submit();"
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition">
-                                Publish Now
-                            </button>
+                            <form action="{{ route('admin.content-entries.publish', [$contentType, $entry]) }}" 
+                                  method="POST" 
+                                  class="inline">
+                                @csrf
+                                <button type="submit" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition">
+                                    Publish Now
+                                </button>
+                            </form>
                             @else
-                            <button type="button" 
-                                    onclick="if(confirm('Unpublish this entry?')) { document.querySelector('form').action='{{ route('admin.content-entries.unpublish', [$contentType, $entry]) }}'; document.querySelector('form').submit(); }"
-                                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition">
-                                Unpublish
-                            </button>
+                            <form action="{{ route('admin.content-entries.unpublish', [$contentType, $entry]) }}" 
+                                  method="POST" 
+                                  class="inline">
+                                @csrf
+                                <button type="submit"
+                                        class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition">
+                                    Unpublish
+                                </button>
+                            </form>
                             @endif
                         </div>
                     </div>
