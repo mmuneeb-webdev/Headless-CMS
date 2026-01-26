@@ -38,7 +38,8 @@
                     </div>
                     <span class="ml-3 font-medium">Dashboard</span>
                 </a>
-
+                <!-- Divider -->
+                <div class="my-3 border-t border-gray-200"></div>
                 <!-- Content Types -->
                 <a href="{{ route('admin.content-types.index') }}"
                     class="group flex items-center px-4 py-3 rounded-lg transition
@@ -59,6 +60,22 @@
 
                 <!-- Divider -->
                 <div class="my-3 border-t border-gray-200"></div>
+                <!-- Media Library -->
+                <a href="{{ route('admin.media.index') }}"
+                    class="group flex items-center px-4 py-3 rounded-lg transition
+   {{ request()->routeIs('admin.media.*') ? 'bg-purple-50 text-purple-700' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <div
+                        class="w-9 h-9 rounded-lg flex items-center justify-center
+        {{ request()->routeIs('admin.media.*') ? 'bg-purple-100' : 'bg-gray-100 group-hover:bg-gray-200' }}">
+                        <svg
+                            class="w-5 h-5 {{ request()->routeIs('admin.media.*') ? 'text-purple-600' : 'text-gray-600' }}">
+                            <!-- icon -->
+                        </svg>
+                    </div>
+                    <span class="ml-3 font-medium">Media Library</span>
+                </a>
+                <!-- Divider -->
+                <div class="my-3 border-t border-gray-200"></div>
 
                 <!-- Users -->
                 <a href="{{ route('admin.users.index') }}"
@@ -72,31 +89,36 @@
                     </div>
                     <span class="ml-3 font-medium">Users</span>
                 </a>
-
+                <!-- Divider -->
+                <div class="my-3 border-t border-gray-200"></div>
                 <!-- Roles -->
                 <a href="{{ route('admin.roles.index') }}"
                     class="group flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
                     <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
                     </div>
                     <span class="ml-3 font-medium">Roles</span>
                 </a>
-
+                <!-- Divider -->
+                <div class="my-3 border-t border-gray-200"></div>
                 <!-- Permissions -->
                 <a href="{{ route('admin.permissions.index') }}"
                     class="group flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
                     <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center">
                         <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
                     </div>
                     <span class="ml-3 font-medium">Permissions</span>
                 </a>
 
             </nav>
-
+            <!-- Divider -->
+            <div class="my-3 border-t border-gray-200"></div>
             <!-- User / Logout -->
             <div class="absolute bottom-0 w-full p-4 border-t border-gray-200 bg-white">
                 <div class="flex items-center mb-3">

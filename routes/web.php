@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ContentTypeController;
 use App\Http\Controllers\Admin\ContentEntryController;
+use App\Http\Controllers\Admin\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,4 +146,13 @@ Route::prefix('admin')
         // Version rollback
         Route::post('/content/{contentType}/entries/{entry}/rollback/{version}', [ContentEntryController::class, 'rollback'])
             ->name('content-entries.rollback');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Media Management
+        |--------------------------------------------------------------------------
+        */
+        Route::resource('media', MediaController::class);
+        Route::get('/media-picker', [MediaController::class, 'picker'])
+            ->name('media.picker');
     });

@@ -115,6 +115,7 @@ class ContentEntryController extends Controller
             'data' => $validated['data'],
             'meta' => $request->meta ?? $entry->meta,
         ]);
+        $entry->createVersion('Content updated');
 
         return redirect()
             ->route('admin.content-entries.edit', [$contentType, $entry])
